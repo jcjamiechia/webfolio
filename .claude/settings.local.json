@@ -17,7 +17,9 @@
       "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/4.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_workshop.jpg\")",
       "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/5.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_esp32.jpg\")",
       "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/6.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_team.jpg\")",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(gh api:*)",
+      "Bash(MSYS_NO_PATHCONV=1 flutter build web --release --base-href=\"/webfolio/\")"
     ]
   }
 }

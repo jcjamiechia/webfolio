@@ -428,6 +428,8 @@ class ProjectData {
   final String? linkUrl;
   final String? youtubeVideoId;
 
+  final List<String> tags;
+
   final List<String> documentEmbedUrls;
   final List<String> documentTitles;
 
@@ -442,6 +444,7 @@ class ProjectData {
     this.timeline,
     this.toolsUsed,
     this.note,
+    this.tags = const [],
     this.keyFeatures = const [],
     this.highlights = const [],
     this.galleryImages = const [],
@@ -459,11 +462,9 @@ class ProjectData {
 
 class ProjectCard extends StatelessWidget {
   final ProjectData project;
-  final bool reverse;
 
   const ProjectCard({
     required this.project,
-    this.reverse = false,
     super.key,
   });
 
@@ -511,109 +512,78 @@ class ProjectCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < AppBreakpoints.mobile;
-
-        final imageSection = ClipRRect(
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          child: AspectRatio(
-            aspectRatio: 16 / 9,
-            child: Image.asset(
-              project.imagePath,
-              fit: BoxFit.cover,
-            ),
-          ),
-        );
-
-        final textSection = Padding(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(project.title, style: AppTextStyles.cardTitle),
-              const SizedBox(height: 10),
-              Text(
-                project.summary,
-                style: AppTextStyles.body,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () => _openProjectPage(context),
+      child: _buildCardShell(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(AppRadius.md),
+                topRight: Radius.circular(AppRadius.md),
               ),
-              if ((project.toolsUsed ?? '').trim().isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Text(
-                  project.toolsUsed!,
-                  style: AppTextStyles.toolsLabel,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: Image.asset(
+                  project.imagePath,
+                  fit: BoxFit.cover,
                 ),
-              ],
-              const SizedBox(height: 14),
-              Row(
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'View Details',
-                    style: AppTextStyles.cardSubtitle.copyWith(
-                      color: AppColors.secondaryAccent,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 13,
-                    ),
+                    project.title,
+                    style: AppTextStyles.cardTitle.copyWith(fontSize: 20),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 14,
-                    color: AppColors.secondaryAccent,
+                  const SizedBox(height: 8),
+                  Text(
+                    project.summary,
+                    style: AppTextStyles.body.copyWith(fontSize: 14),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if ((project.toolsUsed ?? '').trim().isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      project.toolsUsed!,
+                      style: AppTextStyles.toolsLabel.copyWith(fontSize: 12),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Text(
+                        'View Details',
+                        style: AppTextStyles.cardSubtitle.copyWith(
+                          color: AppColors.secondaryAccent,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(
+                        Icons.arrow_forward_rounded,
+                        size: 14,
+                        color: AppColors.secondaryAccent,
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
-        );
-
-        final card = GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () => _openProjectPage(context),
-          child: _buildCardShell(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.sm),
-              child: isMobile
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        imageSection,
-                        textSection,
-                      ],
-                    )
-                  : IntrinsicHeight(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: reverse
-                            ? [
-                                Expanded(flex: 4, child: textSection),
-                                const SizedBox(width: AppSpacing.sm),
-                                Expanded(flex: 5, child: imageSection),
-                              ]
-                            : [
-                                Expanded(flex: 5, child: imageSection),
-                                const SizedBox(width: AppSpacing.sm),
-                                Expanded(flex: 4, child: textSection),
-                              ],
-                      ),
-                    ),
             ),
-          ),
-        );
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
-          ),
-          child: card,
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 }

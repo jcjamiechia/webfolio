@@ -4,7 +4,7 @@ Follow these steps in order:
 
 1. **Build the Flutter web app** by running:
    ```
-   flutter build web --release --base-href "/"
+   MSYS_NO_PATHCONV=1 flutter build web --release --base-href="/webfolio/"
    ```
    If the build fails, show the error to the user and stop.
 

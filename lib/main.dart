@@ -54,8 +54,9 @@ class _PortfolioPageState extends State<PortfolioPage> {
   final _contactKey = GlobalKey();
   double _welcomeOpacity = 1.0;
 
-  String _activeSection = 'Home';
+  String _activeSection = 'About';
   bool _navElevated = false;
+  String _selectedTag = 'All';
 
   final List<ProjectData> _projects = const [
     ProjectData(
@@ -68,6 +69,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
       company: '10.023 Designing Energy System',
       strategies: 'Design, CAD, Energy and Power Analysis, User Research',
       timeline: 'May 2025 – Aug 2025',
+      tags: ['Hardware', 'Design'],
       toolsUsed: 'Canva, Fusion360, Fritzing',
       fullDescription:
           'FabCat is a smart safety attire checker designed for fabrication lab environments. The project focuses on improving compliance and reducing human error through automated detection and feedback.',
@@ -94,6 +96,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
       company: '03.007 Design Thinking and Innovation',
       strategies: 'Design, CAD, Arduino, Python, User Research, Video Editing',
       timeline: 'Jan 2025 – April 2025',
+      tags: ['Hardware', 'Software', 'Design'],
       toolsUsed: 'Canva, Blender, Adobe After Effects',
       fullDescription:
           'FabCat is a smart safety attire checker designed for fabrication lab environments. The project focuses on improving compliance and reducing human error through automated detection and feedback.',
@@ -127,6 +130,7 @@ class _PortfolioPageState extends State<PortfolioPage> {
       strategies:
           'Data Sourcing and Cleaning, Development of evaluation metric, Building multilinear regression model.',
       timeline: 'July 2025 – Aug 2025',
+      tags: ['Data', 'Software'],
       toolsUsed: 'Excel, Python, PowerBI',
       fullDescription:
           '''As students who care and are passionate about Singapore culture, we noticed that the sustainability of Singapore's hawker culture has become a serious cause for concern as fewer youths show interest in pursuing hawking as a viable career path. Hence our project emphasises the importance of preserving this iconic feature and culture of our country.
@@ -160,6 +164,7 @@ Hence, our problem statement is as follows: How might we predict the participati
           'A lifecycle analysis comparing different material choices through sustainability evaluation.',
       subtitle:
           'A lifecycle analysis comparing different material choices through sustainability evaluation.',
+      tags: ['Design'],
       company: '10.023 Designing Energy System',
       strategies: 'Design, CAD, Energy and Power Analysis, User Research',
       timeline: 'May 2025 – Aug 2025',
@@ -231,12 +236,10 @@ Hence, our problem statement is as follows: How might we predict the participati
     }
 
     final sectionPositions = <String, double>{
-      'Home': _sectionTop(_welcomeKey),
       'About': _sectionTop(_aboutKey),
       'Projects': _sectionTop(_projectsKey),
       'Experience': _sectionTop(_experienceKey),
       'Leadership': _sectionTop(_leadershipKey),
-      'Contact': _sectionTop(_contactKey),
     };
 
     String nearestSection = _activeSection;
@@ -329,11 +332,17 @@ Hence, our problem statement is as follows: How might we predict the participati
           ),
           child: Row(
             children: [
-              Text(
-                'Jamie Chia',
-                style: AppTextStyles.cardTitle.copyWith(
-                  fontSize: 18,
-                  color: AppColors.textWhite,
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => _scrollTo(_welcomeKey),
+                  child: Text(
+                    'Jamie Chia',
+                    style: AppTextStyles.cardTitle.copyWith(
+                      fontSize: 18,
+                      color: AppColors.textWhite,
+                    ),
+                  ),
                 ),
               ),
               const Spacer(),
@@ -341,11 +350,6 @@ Hence, our problem statement is as follows: How might we predict the participati
                 spacing: 4,
                 runSpacing: 4,
                 children: [
-                  NavButton(
-                    'Home',
-                    () => _scrollTo(_welcomeKey),
-                    isActive: _activeSection == 'Home',
-                  ),
                   NavButton(
                     'About',
                     () => _scrollTo(_aboutKey),
@@ -365,11 +369,6 @@ Hence, our problem statement is as follows: How might we predict the participati
                     'Leadership',
                     () => _scrollTo(_leadershipKey),
                     isActive: _activeSection == 'Leadership',
-                  ),
-                  NavButton(
-                    'Contact',
-                    () => _scrollTo(_contactKey),
-                    isActive: _activeSection == 'Contact',
                   ),
                 ],
               ),
@@ -537,16 +536,78 @@ Hence, our problem statement is as follows: How might we predict the participati
             child: SectionTitle('Projects'),
           ),
           const SizedBox(height: 8),
-          for (int i = 0; i < _projects.length; i++)
-            FadeInUp(
-              key: ValueKey('project_$i'),
-              delayMs: 80 * i,
-              repeat: false,
-              child: ProjectCard(
-                project: _projects[i],
-                reverse: i.isOdd,
-              ),
+          // Filter chips
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final tag in ['All', 'Hardware', 'Software', 'Data', 'Design'])
+                  ChoiceChip(
+                    label: Text(tag),
+                    selected: _selectedTag == tag,
+                    onSelected: (_) => setState(() => _selectedTag = tag),
+                    selectedColor: AppColors.primary,
+                    backgroundColor: AppColors.surface,
+                    labelStyle: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: _selectedTag == tag
+                          ? AppColors.buttonTextLight
+                          : AppColors.textSecondary,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
+                      side: BorderSide(
+                        color: _selectedTag == tag
+                            ? AppColors.primary
+                            : AppColors.divider.withOpacity(AppOpacity.light),
+                      ),
+                    ),
+                    showCheckmark: false,
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  ),
+              ],
             ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          // Filtered project grid
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isMobile = constraints.maxWidth < AppBreakpoints.mobile;
+                final crossCount = isMobile ? 1 : 2;
+                final spacing = AppSpacing.md;
+                final cardWidth = (constraints.maxWidth - spacing * (crossCount - 1)) / crossCount;
+
+                final filtered = _selectedTag == 'All'
+                    ? _projects
+                    : _projects.where((p) => p.tags.contains(_selectedTag)).toList();
+
+                return Wrap(
+                  spacing: spacing,
+                  runSpacing: spacing,
+                  children: [
+                    for (int i = 0; i < filtered.length; i++)
+                      SizedBox(
+                        width: isMobile ? constraints.maxWidth : cardWidth,
+                        child: FadeInUp(
+                          key: ValueKey('project_${filtered[i].title}'),
+                          delayMs: 80 * i,
+                          repeat: false,
+                          child: ProjectCard(
+                            project: filtered[i],
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+          ),
         ],
       ),
     );

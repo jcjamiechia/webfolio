@@ -11,7 +11,9 @@ dependencies:
     sdk: flutter
   animated_text_kit: ^4.2.2
   font_awesome_flutter: ^10.7.0
+  google_fonts: ^6.2.1
   url_launcher: ^6.1.7
+  visibility_detector: ^0.4.0+2
 
 
 
@@ -23,9 +25,46 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - lib/assets/profile.png
-    - lib/assets/about.png
-    - lib/assets/experience.png
-    - lib/assets/verbasense.png
+    - lib/assets/welcome.jpg
+    - lib/assets/profile.JPG
+    - lib/assets/about.jpg
+    - lib/assets/experience.jpg
+    - lib/assets/fabcat.jpg
     - lib/assets/capacitor.png
     - lib/assets/icecream.png
+    - lib/assets/criticalimage1.jpg
+    - lib/assets/criticalimage2.jpg
+    - lib/assets/siteanalysis.jpg
+    - lib/assets/useranalysis.jpg
+    - lib/assets/RWW.jpg
+    - lib/assets/fabcat2.jpg
+    - lib/assets/wbgt.jpg
+    - lib/assets/wbgtfront.jpg
+    - lib/assets/wbgtback.jpg
+    - lib/assets/wbgttesting.jpg
+    - lib/assets/wbgtgroup.jpg
+    - lib/assets/wbgtopen.jpg
+    - lib/assets/dtp3.jpg
+    - lib/assets/dtp3cover.jpg
+    - lib/assets/fabcat_present1.jpg
+    - lib/assets/fabcat_present2.jpg
+    - lib/assets/fabcat_workshop.jpg
+    - lib/assets/fabcat_esp32.jpg
+    - lib/assets/fabcat_team.jpg
+    - lib/assets/welcome_new.png
+
+  
+  fonts:
+    - family: PlayfairDisplay
+      fonts:
+        - asset: lib/assets/fonts/playfair-display.regular.ttf
+        - asset: lib/assets/fonts/playfair-display.bold.ttf
+          weight: 700
+
+    - family: Inter
+      fonts:
+        - asset: lib/assets/fonts/Inter_18pt-Regular.ttf
+        - asset: lib/assets/fonts/Inter_18pt-Italic.ttf
+          style: italic
+        - asset: lib/assets/fonts/Inter_18pt-Bold.ttf
+          weight: 700

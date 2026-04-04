@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Student-ChiaYanZhenJ/.claude/**)",
+      "Bash(where gh:*)",
+      "Bash(git config:*)",
+      "Bash(gh auth:*)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/GitHub CLI:/c/Users/Student-ChiaYanZhenJ/AppData/Local/Microsoft/WinGet/Packages\")",
+      "Read(//c/Program Files/GitHub CLI//**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Bash(export PATH=\"$PATH:/c/Program Files/GitHub CLI\")",
+      "Bash(gh repo:*)",
+      "Bash(taskkill //F //IM \"dart.exe\")",
+      "Bash(taskkill //F //IM \"chrome.exe\")",
+      "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/2.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_present1.jpg\")",
+      "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/3.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_present2.jpg\")",
+      "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/4.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_workshop.jpg\")",
+      "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/5.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_esp32.jpg\")",
+      "Bash(cp \"C:/Users/Student-ChiaYanZhenJ/.claude/image-cache/ea01ad4c-1bb9-421c-a52e-4f59d878cbc8/6.png\" \"C:/Users/Student-ChiaYanZhenJ/Desktop/Website Workshop/webfolio/lib/assets/fabcat_team.jpg\")",
+      "Bash(cp:*)"
+    ]
+  }
+}

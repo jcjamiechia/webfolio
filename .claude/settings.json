@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git push*)",
+      "Bash(git pull*)",
+      "Bash(git branch*)",
+      "Bash(git checkout*)",
+      "Bash(git merge*)",
+      "Bash(gh pr*)",
+      "Bash(gh issue*)",
+      "Bash(gh repo*)",
+      "Bash(flutter run*)",
+      "Bash(flutter build*)",
+      "Bash(flutter pub*)",
+      "Bash(flutter clean*)",
+      "Bash(flutter doctor*)",
+      "Bash(flutter devices*)",
+      "Bash(ls*)",
+      "Bash(dir*)",
+      "Bash(mkdir*)",
+      "Bash(cat*)",
+      "Bash(pwd)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep"
+    ]
+  }
+}

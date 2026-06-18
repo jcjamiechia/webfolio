@@ -69,7 +69,10 @@
       "Bash(curl -s https://jcjamiechia.github.io/webfolio/)",
       "Bash(echo \"is-HTML-site: $\\(curl -s https://jcjamiechia.github.io/webfolio/)",
       "Bash(cp ../htmlfolio/script.js docs/)",
-      "Bash(node -c docs/script.js)"
+      "Bash(node -c docs/script.js)",
+      "Bash(curl -s 'https://jcjamiechia.github.io/webfolio/script.js')",
+      "Bash(node -c ../htmlfolio/script.js)",
+      "Bash(cp ../htmlfolio/script.js ../htmlfolio/index.html ../htmlfolio/styles.css docs/)"
     ]
   }
 }

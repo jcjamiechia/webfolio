@@ -26,6 +26,10 @@
 
   --nav-h: 64px;
 
+  /* Playfair Display = elegant editorial headings; Outfit = clean UI text. */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-ui: 'Outfit', sans-serif;
+
   --shadow-card: 0 8px 30px rgba(0,0,0,0.35);
   --shadow-hover: 0 18px 48px rgba(0,0,0,0.45);
   --shadow-glow: 0 0 60px rgba(212,166,106,0.18);
@@ -125,7 +129,7 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 }
 section { padding-bottom: var(--s-xl); scroll-margin-top: var(--nav-h); }
 .section-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(28px, 4vw, 40px);
   font-weight: 700;
   line-height: 1.15;
@@ -177,8 +181,8 @@ section { padding-bottom: var(--s-xl); scroll-margin-top: var(--nav-h); }
   mix-blend-mode: screen;
 }
 .hero-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(32px, 5vw, 48px);
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5.2vw, 52px);
   font-weight: 700;
   margin: 16px 0 8px;
   letter-spacing: -0.02em;
@@ -373,8 +377,8 @@ section { padding-bottom: var(--s-xl); scroll-margin-top: var(--nav-h); }
   border-radius: 2px;
 }
 .footer-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 30px; font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 32px; font-weight: 700;
   margin: 0 0 8px;
 }
 .footer-sub {
@@ -465,8 +469,8 @@ section { padding-bottom: var(--s-xl); scroll-margin-top: var(--nav-h); }
   background: linear-gradient(180deg, transparent 40%, var(--bg-2));
 }
 .modal h2 {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(24px, 3.4vw, 32px);
+  font-family: var(--font-display);
+  font-size: clamp(25px, 3.6vw, 34px);
   font-weight: 700; margin: 0 0 6px;
   color: var(--text);
 }
@@ -632,6 +636,42 @@ section { padding-bottom: var(--s-xl); scroll-margin-top: var(--nav-h); }
 .pv-thumb:hover .pv-ring { transform: translateY(-2px); }
 .pv-thumb.active .pv-ring { border-color: var(--primary); border-width: 2.5px; }
 .pv-thumb.active .pv-label { color: var(--text); font-weight: 700; }
+
+/* ─── Lightbox ─────────────────────────────────────────────────── */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200;
+  display: none;
+  background: rgba(10,8,6,0.93);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  animation: fadeIn 200ms ease;
+}
+.lightbox.open { display: block; }
+.lightbox-scroll {
+  position: absolute; inset: 0;
+  overflow: auto;
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px;
+}
+.lightbox img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--r-sm);
+  cursor: zoom-in;
+}
+.lightbox img.zoomed {
+  max-width: none; max-height: none;
+  width: auto; height: auto;
+  cursor: zoom-out;
+  border-radius: 0;
+}
+.lightbox-close {
+  position: fixed; top: 16px; right: 16px; z-index: 2;
+  width: 42px; height: 42px; border-radius: var(--r-pill);
+  background: rgba(26,23,20,0.7); color: var(--text);
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 180ms ease, transform 180ms ease;
+}
+.lightbox-close:hover { background: rgba(26,23,20,0.95); transform: rotate(90deg); }
 
 /* ─── Stagger helper ──────────────────────────────────────────── */
 .stagger > * { opacity: 0; transform: translateY(16px); transition: opacity 600ms ease, transform 600ms cubic-bezier(0.22,1,0.36,1); }

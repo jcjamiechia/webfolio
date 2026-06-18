@@ -15,6 +15,7 @@ const projects = [
       'In this project, we addressed the Vehicle Routing Problem with Time Windows (VRPTW) by optimising parcel-delivery routes to all MRT stations in Singapore, treating the stations as collection hubs. MRT stations were chosen for their high accessibility and even coverage across the island — most customers live close to a station, letting them collect parcels conveniently during daily commutes while consolidating deliveries to fewer points.\n\n' +
       'We modelled the problem as a Mixed-Integer Linear Program (MILP) whose objective is to determine optimal vehicle routes that minimise total travel distance while ensuring every station is visited subject to demand and time-window constraints.',
     note: 'Slide 6 of the deck is an animation that could not be embedded in the slides/PDF — the looping route optimisation animation below shows it in full.',
+    galleryTitle: 'Visualisation',
     gallery: [
       { src: 'assets/vrptw_route.gif', caption: 'Slide 6 — looping route optimisation animation across the MRT network.' },
     ],
@@ -124,26 +125,6 @@ const projects = [
       { title: 'Data Analysis',           url: 'https://drive.google.com/file/d/12Q22PaYezzbuVzOYtLceYV3SQMScxGeQ8kN1FVzLrP8/preview' },
       { title: 'Why does our project matter?', url: 'https://drive.google.com/file/d/1hT_RDFFKfVYx8wSBt08P-5LpFU5jstyZ/preview' },
     ],
-  },
-  {
-    image: 'assets/icecream.png',
-    title: 'Battle of the Ice Cream Cup',
-    summary: 'A lifecycle analysis comparing different material choices through sustainability evaluation.',
-    subtitle: 'A lifecycle analysis comparing different material choices through sustainability evaluation.',
-    company: '10.023 Designing Energy System',
-    strategies: 'Lifecycle Analysis, Sustainability Evaluation, Comparative Design',
-    timeline: 'May 2025 – Aug 2025',
-    tags: ['Design'],
-    tools: 'Excel, Canva',
-    description:
-      'This project examined the environmental implications of different cup material choices through lifecycle analysis. The work compared trade-offs between sustainability, usability, and production impact.',
-    highlights: [
-      'Compared multiple material options.',
-      'Evaluated sustainability trade-offs.',
-      'Linked design decisions to environmental impact.',
-    ],
-    gallery: [],
-    documents: [],
   },
 ];
 
@@ -362,6 +343,47 @@ function openModalShell(html) {
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
+  bindImageZoom();
+}
+
+// ─── Lightbox (in-site image zoom, never zooms the page) ────────
+function bindImageZoom() {
+  modalBody.querySelectorAll('.story-photo img, .pv-main img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => openLightbox(img.src));
+  });
+}
+
+function openLightbox(src) {
+  let lb = document.getElementById('lightbox');
+  if (!lb) {
+    lb = document.createElement('div');
+    lb.id = 'lightbox';
+    lb.className = 'lightbox';
+    lb.innerHTML =
+      '<button class="lightbox-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>' +
+      '<div class="lightbox-scroll"><img alt="" /></div>';
+    document.body.appendChild(lb);
+    lb.addEventListener('click', e => {
+      if (e.target === lb || e.target.closest('.lightbox-close') || e.target.classList.contains('lightbox-scroll')) {
+        closeLightbox();
+      }
+    });
+    const lbImg = lb.querySelector('img');
+    lbImg.addEventListener('click', e => { e.stopPropagation(); lbImg.classList.toggle('zoomed'); });
+  }
+  const lbImg = lb.querySelector('img');
+  lbImg.src = src;
+  lbImg.classList.remove('zoomed');
+  lb.querySelector('.lightbox-scroll').scrollTop = 0;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (lb) lb.classList.remove('open');
+  document.body.style.overflow = modal.classList.contains('open') ? 'hidden' : '';
 }
 
 function openProjectModal(idx) {
@@ -409,7 +431,7 @@ function openProjectModal(idx) {
 
     ${p.productViews?.length ? `<h3>Product Views</h3>${productViewer(p.productViews)}` : ''}
 
-    ${p.gallery?.length ? `<h3>Gallery</h3>${storyGallery(p.gallery)}` : ''}
+    ${p.gallery?.length ? `<h3>${escapeHtml(p.galleryTitle || 'Gallery')}</h3>${storyGallery(p.gallery)}` : ''}
   `);
 
   bindProductViewer();
@@ -447,7 +469,10 @@ modal.addEventListener('click', e => {
   if (e.target.matches('[data-close]')) closeModal();
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  if (e.key !== 'Escape') return;
+  const lb = document.getElementById('lightbox');
+  if (lb && lb.classList.contains('open')) { closeLightbox(); return; }
+  if (modal.classList.contains('open')) closeModal();
 });
 
 function metaBlock(label, value) {

@@ -63,7 +63,13 @@
       "Bash(echo \"favicon: $\\(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/favicon.png\\)\")",
       "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/assets/ecommerce_poster.png)",
       "Bash(echo \"ecommerce: $\\(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/assets/ecommerce_poster.png\\)\")",
-      "Bash(grep -vE \"^\\\\s*$\")"
+      "Bash(grep -vE \"^\\\\s*$\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' https://jcjamiechia.github.io/webfolio/)",
+      "Bash(echo \"status: $\\(curl -s -o /dev/null -w '%{http_code}' https://jcjamiechia.github.io/webfolio/\\)\")",
+      "Bash(curl -s https://jcjamiechia.github.io/webfolio/)",
+      "Bash(echo \"is-HTML-site: $\\(curl -s https://jcjamiechia.github.io/webfolio/)",
+      "Bash(cp ../htmlfolio/script.js docs/)",
+      "Bash(node -c docs/script.js)"
     ]
   }
 }

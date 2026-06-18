@@ -7,9 +7,9 @@ const projects = [
     subtitle: 'Optimised parcel-delivery routes to all MRT stations in Singapore, treating stations as high-coverage collection hubs.',
     company: '40.002 Optimisation',
     strategies: 'MILP formulation, route optimisation, time-window constraints, data visualisation',
-    timeline: 'Apr 2026 – Jun 2026',
+    timeline: 'Feb 2026 – Apr 2026',
     tags: ['Data', 'Software'],
-    tools: 'Python',
+    tools: 'Python, Julia',
     description:
       "Singapore's dense urban transport network makes route planning especially complex when servicing many locations under delivery time windows. Combining the road network with a high density of stops makes routing optimisation both computationally challenging and practically valuable.\n\n" +
       'In this project, we addressed the Vehicle Routing Problem with Time Windows (VRPTW) by optimising parcel-delivery routes to all MRT stations in Singapore, treating the stations as collection hubs. MRT stations were chosen for their high accessibility and even coverage across the island — most customers live close to a station, letting them collect parcels conveniently during daily commutes while consolidating deliveries to fewer points.\n\n' +
@@ -26,15 +26,27 @@ const projects = [
   {
     image: 'assets/ecommerce_poster.png',
     title: 'Data Analytics for E-Commerce',
-    summary: 'Details coming soon.',
-    subtitle: 'Details coming soon.',
+    summary: 'Forecasted SKU demand and designed a budget-constrained opening inventory for a new pharmacy, using 24 months of SwipeRx transaction data across 4,000+ SKUs.',
+    subtitle: 'Built a demand forecast and an optimised opening assortment for a new pharmacy in Kota Jakarta Utara — balancing demand, category coverage, and a fixed budget.',
     company: '40.011 Data and Business Analytics',
-    strategies: '',
+    strategies: 'Data cleaning, exploratory analysis, demand forecasting (linear regression), SKU scoring, budget-constrained assortment',
     timeline: 'Feb 2026 – Apr 2026',
     tags: ['Data'],
-    tools: '',
-    description: 'Details coming soon.',
-    gallery: [{ src: 'assets/ecommerce_team.jpg', caption: 'The team.' }],
+    tools: 'Python, Julia',
+    description:
+      'SwipeRx operates the largest digital network for pharmacy professionals in Southeast Asia — over 300,000 professionals across 50,000 pharmacies. For a new pharmacy opening in Kota Jakarta Utara, we set out to forecast product demand for January 2026 and design an optimal opening inventory that stays within budget while ensuring category coverage and demand alignment.\n\n' +
+      'Working from 24 months of transaction data spanning 4,000+ SKUs and 6,000+ pharmacies, we cleaned and aggregated the data, then explored purchasing trends and seasonality — finding an overall upward trend driven largely by growth in the number of active pharmacies.\n\n' +
+      'We built a component-based forecast (reconstructing revenue from active pharmacies × quantity per pharmacy × implied price) using linear regression. It reached roughly 90% accuracy against actual January 2026 results and outperformed direct revenue forecasting. We then scored and ranked SKUs for the local market and assembled a category-balanced opening assortment within a fixed budget.',
+    highlights: [
+      'Forecast reached ~90% accuracy (4.76M predicted vs 4.83M actual units) for January 2026.',
+      'Component-based forecasting outperformed direct revenue forecasting.',
+      'Final assortment: 1,679 SKUs and 3,834 opening units within a ~$19,000 budget ($18,999.95 total cost).',
+      'Team 13: Anchita Kharbanda, Daryl Cheong, Ezekiel Lim, Jamie Chia, Mayur Vengali.',
+    ],
+    gallery: [
+      { src: 'assets/ecommerce_poster.png', caption: 'Project poster — full methodology and results.' },
+      { src: 'assets/ecommerce_team.jpg', caption: 'Team 13.' },
+    ],
     documents: [],
   },
   {
@@ -262,7 +274,12 @@ grid.classList.add('stagger');
 renderGrid();
 
 // ─── Render Experience & Leadership ─────────────────────────────
+// Toggle to re-enable clickable detail pages (reflection + photos) once the
+// reflection text and real photos are ready. The data above is kept either way.
+const ENABLE_EXP_DETAIL = false;
+
 function hasDetail(item) {
+  if (!ENABLE_EXP_DETAIL) return false;
   return (item.reflection && item.reflection.length) || (item.photos && item.photos.length);
 }
 

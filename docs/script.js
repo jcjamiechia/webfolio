@@ -109,6 +109,7 @@ const projects = [
     gallery: [{ src: 'assets/DTP3.jpg', caption: 'Project overview.' }],
     documents: [
       { title: 'Final Report',           url: 'https://drive.google.com/file/d/1_T0LXBQXUlAXcz8rKrWWJ2aq5dFGxw9a/preview' },
+      { title: 'Data Analysis',           url: 'https://drive.google.com/file/d/12Q22PaYezzbuVzOYtLceYV3SQMScxGeQ8kN1FVzLrP8/preview' },
       { title: 'Why does our project matter?', url: 'https://drive.google.com/file/d/1hT_RDFFKfVYx8wSBt08P-5LpFU5jstyZ/preview' },
     ],
   },

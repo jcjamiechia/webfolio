@@ -94,7 +94,7 @@ We modelled the problem as a Mixed-Integer Linear Program (MILP) whose objective
         'Project Poster',
       ],
       documentEmbedUrls: [
-        'https://docs.google.com/presentation/d/1D9NoLAehRiq2UU9EUEkxqUZePwydHZRQ/embed?start=false&loop=false&delayms=3000',
+        'https://drive.google.com/file/d/1VhONEfee0TDmVbXFE20aHak5JS2k36aB/preview',
         'https://drive.google.com/file/d/1HB41rUFbEsYqLb9hFJ7v_Xg4pDxLNRjL/preview',
         'https://drive.google.com/file/d/17Ri5JSjQp059i8K1kQXngNnSyYn8wsVV/preview',
       ],
@@ -802,12 +802,29 @@ Hence, our problem statement is as follows: How might we predict the participati
             Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: ExperienceItem(
-                title: 'House Guardians @ Singapore University of Technology and Design',
-                subtitle:
-                    'Senator, Housing Representative of 10th Students’ Association Council | Nov 2024 – Present',
+                title: 'Housing Representative @ 10th SUTD Student Association Council',
+                subtitle: 'Student Representative | Apr 2026 – Present',
                 tasks: [
-                  'Oversaw well-being of 1200+ hostel residents and served as bridge between the Office of Student Life and residents, ensuring safety and comfort while advocating for residents’ needs.',
-                  'Organized 15 hostel and welfare events for 1200+ residents, enhancing community engagement and the living environment.',
+                  'Represented residential students on housing, welfare, infrastructure, and policy matters.',
+                  'Liaised with the Office of Housing to surface resident feedback and quality-of-life concerns.',
+                  'Tracked infrastructure issues and escalated recurring concerns for follow-up.',
+                  'Supported communication on housing policies, complaints, disciplinary matters, and admin updates.',
+                  'Worked with Residential College stakeholders to ensure resident concerns were clearly represented.',
+                ],
+              ),
+            ),
+            SizedBox(height: AppSpacing.sm),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              child: ExperienceItem(
+                title: 'Senator @ SUTD House Guardians',
+                subtitle: 'Residential Life & Internal Affairs | Nov 2025 – Present',
+                tasks: [
+                  'Supported House Guardian operations, residential activities, and internal planning.',
+                  'Coordinated Mass Check-In, Residential Life Briefing, HG recruitment, Housing Allocation, and Open House support.',
+                  'Managed the House Guardian calendar across FE, IBE, HWE, and internal HG events.',
+                  'Served as an information point for HGs and residents on residential and admin matters.',
+                  'Supported HG continuity through recruitment, internal coordination, and communication with the Residential College House Committee.',
                 ],
               ),
             ),

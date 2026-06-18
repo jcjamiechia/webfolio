@@ -53,6 +53,32 @@ const projects = [
     ],
   },
   {
+    image: 'assets/dtp3cover.jpg',
+    title: 'Predicting Youth Interest in Hawker Culture',
+    summary:
+      'Built a multiple linear regression model to predict youth interest in becoming hawkers across Singapore.',
+    subtitle:
+      'Created a model to predict the number of youths who aspire to become hawkers across different areas in Singapore.',
+    company: '10.022 Modelling Uncertainty',
+    strategies: 'Data Sourcing & Cleaning, Evaluation Metric Design, Multilinear Regression',
+    timeline: 'Jul 2025 – Aug 2025',
+    tags: ['Data', 'Software'],
+    tools: 'Excel, Python, PowerBI',
+    description:
+      "As students passionate about Singapore culture, we noticed that the sustainability of Singapore's hawker culture has become a serious concern as fewer youths show interest in pursuing hawking as a viable career. We built a model that predicts the number of youths (15–35) who aspire to become hawkers across different areas in Singapore, using multiple linear regression to quantify relationships between youth interest and socio-economic / environmental factors.",
+    highlights: [
+      'Shortlisted as Top 8 Best Design Thinking Projects.',
+      'Used regression in Excel to measure correlation of variables.',
+      'Considered a wide range of metrics to evaluate the model.',
+    ],
+    gallery: [{ src: 'assets/DTP3.jpg', caption: 'Project overview.' }],
+    documents: [
+      { title: 'Final Report',           url: 'https://drive.google.com/file/d/1_T0LXBQXUlAXcz8rKrWWJ2aq5dFGxw9a/preview' },
+      { title: 'Data Analysis',           url: 'https://drive.google.com/file/d/12Q22PaYezzbuVzOYtLceYV3SQMScxGeQ8kN1FVzLrP8/preview' },
+      { title: 'Why does our project matter?', url: 'https://drive.google.com/file/d/1hT_RDFFKfVYx8wSBt08P-5LpFU5jstyZ/preview' },
+    ],
+  },
+  {
     image: 'assets/wbgtgroup.jpg',
     title: 'Solar Powered Wet Bulb Globe Thermometer',
     summary: 'Modified a WBGT monitor to be charged and powered by solar energy.',
@@ -100,32 +126,6 @@ const projects = [
     ],
     documents: [
       { title: 'Presentation Slides', url: 'https://drive.google.com/file/d/1Bb26JtrMVajRe-tut0g1TLNbh0W01H14/preview' },
-    ],
-  },
-  {
-    image: 'assets/dtp3cover.jpg',
-    title: 'Predicting Youth Interest in Hawker Culture',
-    summary:
-      'Built a multiple linear regression model to predict youth interest in becoming hawkers across Singapore.',
-    subtitle:
-      'Created a model to predict the number of youths who aspire to become hawkers across different areas in Singapore.',
-    company: '10.022 Modelling Uncertainty',
-    strategies: 'Data Sourcing & Cleaning, Evaluation Metric Design, Multilinear Regression',
-    timeline: 'Jul 2025 – Aug 2025',
-    tags: ['Data', 'Software'],
-    tools: 'Excel, Python, PowerBI',
-    description:
-      "As students passionate about Singapore culture, we noticed that the sustainability of Singapore's hawker culture has become a serious concern as fewer youths show interest in pursuing hawking as a viable career. We built a model that predicts the number of youths (15–35) who aspire to become hawkers across different areas in Singapore, using multiple linear regression to quantify relationships between youth interest and socio-economic / environmental factors.",
-    highlights: [
-      'Shortlisted as Top 8 Best Design Thinking Projects.',
-      'Used regression in Excel to measure correlation of variables.',
-      'Considered a wide range of metrics to evaluate the model.',
-    ],
-    gallery: [{ src: 'assets/DTP3.jpg', caption: 'Project overview.' }],
-    documents: [
-      { title: 'Final Report',           url: 'https://drive.google.com/file/d/1_T0LXBQXUlAXcz8rKrWWJ2aq5dFGxw9a/preview' },
-      { title: 'Data Analysis',           url: 'https://drive.google.com/file/d/12Q22PaYezzbuVzOYtLceYV3SQMScxGeQ8kN1FVzLrP8/preview' },
-      { title: 'Why does our project matter?', url: 'https://drive.google.com/file/d/1hT_RDFFKfVYx8wSBt08P-5LpFU5jstyZ/preview' },
     ],
   },
 ];

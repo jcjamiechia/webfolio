@@ -74,7 +74,8 @@
       "Bash(node -c ../htmlfolio/script.js)",
       "Bash(cp ../htmlfolio/script.js ../htmlfolio/index.html ../htmlfolio/styles.css docs/)",
       "Bash(curl -s 'https://jcjamiechia.github.io/webfolio/index.html')",
-      "Bash(rm -f deck_1.bin deck_v2.bin)"
+      "Bash(rm -f deck_1.bin deck_v2.bin)",
+      "Bash(node -e \"const fs=require\\('fs'\\); const s=fs.readFileSync\\('../htmlfolio/script.js','utf8'\\); const m=s.slice\\(s.indexOf\\('const projects'\\), s.indexOf\\('const experiences'\\)\\); console.log\\([...m.matchAll\\(/title: '\\([^']+\\)'/g\\)].map\\(\\(x,i\\)=>\\(i+1\\)+'. '+x[1]\\).join\\('\\\\n'\\)\\)\")"
     ]
   }
 }

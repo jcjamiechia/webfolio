@@ -48,7 +48,10 @@ const projects = [
       { src: 'assets/ecommerce_poster.png', caption: 'Project poster — full methodology and results.' },
       { src: 'assets/ecommerce_team.jpg', caption: 'Team 13.' },
     ],
-    documents: [],
+    documents: [
+      { title: 'Presentation', url: 'https://drive.google.com/file/d/1OvwsOnH_G2eLBTJ5XCJ2tUlpN4kkUcaI/preview' },
+      { title: 'Presentation (v2)', url: 'https://drive.google.com/file/d/1VEvUrRnqz3Cb05qMU_GIq-ytOLzSx0Bc/preview' },
+    ],
   },
   {
     image: 'assets/wbgtgroup.jpg',

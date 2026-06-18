@@ -72,7 +72,9 @@
       "Bash(node -c docs/script.js)",
       "Bash(curl -s 'https://jcjamiechia.github.io/webfolio/script.js')",
       "Bash(node -c ../htmlfolio/script.js)",
-      "Bash(cp ../htmlfolio/script.js ../htmlfolio/index.html ../htmlfolio/styles.css docs/)"
+      "Bash(cp ../htmlfolio/script.js ../htmlfolio/index.html ../htmlfolio/styles.css docs/)",
+      "Bash(curl -s 'https://jcjamiechia.github.io/webfolio/index.html')",
+      "Bash(rm -f deck_1.bin deck_v2.bin)"
     ]
   }
 }

@@ -48,7 +48,8 @@ const projects = [
       { src: 'assets/ecommerce_team.jpg', caption: 'Our team and our industry partner Brennan Leong from SwipeRx.' },
     ],
     documents: [
-      { title: 'Presentation', url: 'https://drive.google.com/file/d/1OvwsOnH_G2eLBTJ5XCJ2tUlpN4kkUcaI/preview' },
+      { title: 'Presentation Slides — Phase 1', url: 'https://drive.google.com/file/d/1VEvUrRnqz3Cb05qMU_GIq-ytOLzSx0Bc/preview' },
+      { title: 'Presentation Slides — Phase 2', url: 'https://drive.google.com/file/d/1OvwsOnH_G2eLBTJ5XCJ2tUlpN4kkUcaI/preview' },
     ],
   },
   {

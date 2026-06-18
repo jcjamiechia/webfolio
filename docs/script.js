@@ -33,7 +33,7 @@ const projects = [
     strategies: 'Data cleaning, exploratory analysis, demand forecasting (linear regression), SKU scoring, budget-constrained assortment',
     timeline: 'Feb 2026 – Apr 2026',
     tags: ['Data'],
-    tools: 'Python, Julia',
+    tools: 'SQL, Python, PowerBI, Excel, pandas, NumPy',
     description:
       'SwipeRx operates the largest digital network for pharmacy professionals in Southeast Asia — over 300,000 professionals across 50,000 pharmacies. For a new pharmacy opening in Kota Jakarta Utara, we set out to forecast product demand for January 2026 and design an optimal opening inventory that stays within budget while ensuring category coverage and demand alignment.\n\n' +
       'Working from 24 months of transaction data spanning 4,000+ SKUs and 6,000+ pharmacies, we cleaned and aggregated the data, then explored purchasing trends and seasonality — finding an overall upward trend driven largely by growth in the number of active pharmacies.\n\n' +
@@ -49,7 +49,6 @@ const projects = [
     ],
     documents: [
       { title: 'Presentation', url: 'https://drive.google.com/file/d/1OvwsOnH_G2eLBTJ5XCJ2tUlpN4kkUcaI/preview' },
-      { title: 'Presentation (v2)', url: 'https://drive.google.com/file/d/1VEvUrRnqz3Cb05qMU_GIq-ytOLzSx0Bc/preview' },
     ],
   },
   {

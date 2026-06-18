@@ -20,7 +20,28 @@
       "Bash(cp:*)",
       "Bash(gh api:*)",
       "Bash(MSYS_NO_PATHCONV=1 flutter build web --release --base-href=\"/webfolio/\")",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(flutter analyze *)",
+      "Bash(curl -sL \"https://drive.google.com/uc?export=download&id=17Ri5JSjQp059i8K1kQXngNnSyYn8wsVV\" -o /tmp/vrptw_dl)",
+      "Read(//tmp/**)",
+      "Bash(pdftoppm -v)",
+      "Bash(magick -version)",
+      "Bash(python -c \"import fitz; print\\('pymupdf', fitz.__doc__\\)\")",
+      "Bash(python -c \"import pdf2image; print\\('pdf2image ok'\\)\")",
+      "Bash(where python *)",
+      "Bash(where soffice *)",
+      "Bash(pip install *)",
+      "Bash(python -c \"import fitz; print\\('ok', fitz.version\\)\")",
+      "Bash(curl -sL \"https://drive.google.com/uc?export=download&id=17Ri5JSjQp059i8K1kQXngNnSyYn8wsVV\" -o vrptw_tmp.pdf)",
+      "Bash(python -c ' *)",
+      "Bash(rm vrptw_tmp.pdf)",
+      "Bash(taskkill //F //IM dart.exe //T)",
+      "Bash(curl -sL \"https://docs.google.com/presentation/d/1D9NoLAehRiq2UU9EUEkxqUZePwydHZRQ/export/pdf\" -o slides_tmp.pdf)",
+      "Bash(rm slides_tmp.pdf)",
+      "Bash(curl -sL \"https://drive.google.com/uc?export=download&id=1HB41rUFbEsYqLb9hFJ7v_Xg4pDxLNRjL\" -o vid_tmp)",
+      "PowerShell(flutter build *)",
+      "Bash(python -m http.server 8090)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8090/)"
     ]
   }
 }

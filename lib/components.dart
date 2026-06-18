@@ -29,6 +29,7 @@ class FadeInUp extends StatefulWidget {
   final int delayMs;
   final double visibleFraction;
   final bool repeat;
+  final double scaleFrom;
 
   const FadeInUp({
     required this.child,
@@ -37,6 +38,7 @@ class FadeInUp extends StatefulWidget {
     this.delayMs = 0,
     this.visibleFraction = 0.12,
     this.repeat = false,
+    this.scaleFrom = 0.97,
     super.key,
   });
 
@@ -88,25 +90,23 @@ class _FadeInUpState extends State<FadeInUp> {
         final visible = info.visibleFraction > widget.visibleFraction;
         _handleVisibility(visible);
       },
-      child: AnimatedOpacity(
-        opacity: _isVisible ? 1 : 0,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween<double>(begin: 0, end: _isVisible ? 1 : 0),
         duration: widget.duration,
-        curve: Curves.easeOut,
-        child: TweenAnimationBuilder<double>(
-          tween: Tween<double>(
-            begin: widget.offsetY,
-            end: _isVisible ? 0 : widget.offsetY,
-          ),
-          duration: widget.duration,
-          curve: Curves.easeOut,
-          builder: (context, value, child) {
-            return Transform.translate(
-              offset: Offset(0, value),
-              child: child,
-            );
-          },
-          child: widget.child,
-        ),
+        curve: Curves.easeOutCubic,
+        builder: (context, t, child) {
+          return Opacity(
+            opacity: t.clamp(0.0, 1.0),
+            child: Transform.translate(
+              offset: Offset(0, (1 - t) * widget.offsetY),
+              child: Transform.scale(
+                scale: widget.scaleFrom + (1 - widget.scaleFrom) * t,
+                child: child,
+              ),
+            ),
+          );
+        },
+        child: widget.child,
       ),
     );
   }
@@ -215,40 +215,116 @@ class NavButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 220),
-      curve: Curves.easeOut,
-      decoration: BoxDecoration(
-        color: isActive
-            ? AppColors.primary.withOpacity(0.12)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(
-          color: isActive
-              ? AppColors.primary.withOpacity(0.4)
-              : Colors.transparent,
-          width: 1.5,
-        ),
-      ),
-      child: TextButton(
-        onPressed: onTap,
-        style: TextButton.styleFrom(
-          foregroundColor: isActive ? AppColors.textWhite : AppColors.textSecondary,
-          textStyle: AppTextStyles.navLabel.copyWith(
-            fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-          shape: RoundedRectangleBorder(
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOut,
+          decoration: BoxDecoration(
+            color: isActive
+                ? AppColors.primary.withOpacity(0.12)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(999),
+            border: Border.all(
+              color: isActive
+                  ? AppColors.primary.withOpacity(0.4)
+                  : Colors.transparent,
+              width: 1.5,
+            ),
+          ),
+          child: TextButton(
+            onPressed: onTap,
+            style: TextButton.styleFrom(
+              foregroundColor:
+                  isActive ? AppColors.textWhite : AppColors.textSecondary,
+              textStyle: AppTextStyles.navLabel.copyWith(
+                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+            child: Text(label),
           ),
         ),
-        child: Text(label),
-      ),
+        const SizedBox(height: 3),
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 260),
+          curve: Curves.easeOutCubic,
+          height: 2,
+          width: isActive ? 22 : 0,
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+      ],
     );
   }
 }
 
 // ─── Image Components ─────────────────────────────────────────────────
+
+/// Wraps [child] (typically a BoxFit.cover image) and drifts it vertically as
+/// the page scrolls, creating a subtle parallax depth effect. The child is
+/// sized taller than its slot and the overflow is hidden by the parent's clip.
+class ParallaxBox extends StatelessWidget {
+  final double height;
+  final double range;
+  final Widget child;
+
+  const ParallaxBox({
+    required this.height,
+    required this.child,
+    this.range = 26,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final scrollable = Scrollable.maybeOf(context);
+    final expanded = SizedBox(
+      height: height + range * 2,
+      width: double.infinity,
+      child: child,
+    );
+
+    if (scrollable == null) {
+      return SizedBox(height: height, width: double.infinity, child: child);
+    }
+
+    return AnimatedBuilder(
+      animation: scrollable.position,
+      builder: (context, _) {
+        double drift = 0;
+        final box = context.findRenderObject() as RenderBox?;
+        final viewport =
+            scrollable.context.findRenderObject() as RenderBox?;
+        if (box != null &&
+            box.hasSize &&
+            viewport != null &&
+            viewport.hasSize) {
+          final centerY = box
+              .localToGlobal(box.size.center(Offset.zero), ancestor: viewport)
+              .dy;
+          final frac = (centerY / viewport.size.height).clamp(0.0, 1.0);
+          drift = (0.5 - frac) * 2 * range;
+        }
+        return OverflowBox(
+          minHeight: height + range * 2,
+          maxHeight: height + range * 2,
+          alignment: Alignment.center,
+          child: Transform.translate(
+            offset: Offset(0, drift),
+            child: expanded,
+          ),
+        );
+      },
+    );
+  }
+}
 
 class HeroBannerImage extends StatelessWidget {
   final String assetPath;
@@ -272,10 +348,14 @@ class HeroBannerImage extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            assetPath,
-            fit: BoxFit.cover,
-            width: double.infinity,
+          ParallaxBox(
+            height: height,
+            range: 30,
+            child: Image.asset(
+              assetPath,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
           ),
           Positioned(
             bottom: 0,
@@ -324,10 +404,14 @@ class SimpleImageCard extends StatelessWidget {
         ),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Image.asset(
-        assetPath,
-        fit: BoxFit.cover,
-        width: double.infinity,
+      child: ParallaxBox(
+        height: height,
+        range: 22,
+        child: Image.asset(
+          assetPath,
+          fit: BoxFit.cover,
+          width: double.infinity,
+        ),
       ),
     );
   }
@@ -433,6 +517,11 @@ class ProjectData {
   final List<String> documentEmbedUrls;
   final List<String> documentTitles;
 
+  /// Labeled, clickable product/part views (e.g. Front, Back, Internals).
+  /// When non-empty, the detail page shows an interactive "Product Views"
+  /// section in place of a plain gallery.
+  final List<ProductView> productViews;
+
   const ProjectData({
     required this.imagePath,
     required this.title,
@@ -455,6 +544,20 @@ class ProjectData {
     this.youtubeVideoId,
     this.documentEmbedUrls = const [],
     this.documentTitles = const [],
+    this.productViews = const [],
+  });
+}
+
+/// A single labeled view of a product, shown in [ProductViewer].
+class ProductView {
+  final String label;
+  final String imagePath;
+  final String caption;
+
+  const ProductView({
+    required this.label,
+    required this.imagePath,
+    this.caption = '',
   });
 }
 
@@ -534,51 +637,54 @@ class ProjectCard extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    project.title,
-                    style: AppTextStyles.cardTitle.copyWith(fontSize: 20),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    project.summary,
-                    style: AppTextStyles.body.copyWith(fontSize: 14),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if ((project.toolsUsed ?? '').trim().isNotEmpty) ...[
-                    const SizedBox(height: 10),
+              child: SizedBox(
+                height: 162,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      project.toolsUsed!,
-                      style: AppTextStyles.toolsLabel.copyWith(fontSize: 12),
-                      maxLines: 1,
+                      project.title,
+                      style: AppTextStyles.cardTitle.copyWith(fontSize: 20),
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ],
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
+                    const SizedBox(height: 8),
+                    Text(
+                      project.summary,
+                      style: AppTextStyles.body.copyWith(fontSize: 14),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if ((project.toolsUsed ?? '').trim().isNotEmpty) ...[
+                      const SizedBox(height: 10),
                       Text(
-                        'View Details',
-                        style: AppTextStyles.cardSubtitle.copyWith(
-                          color: AppColors.secondaryAccent,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 13,
-                        ),
-                      ),
-                      const SizedBox(width: 4),
-                      const Icon(
-                        Icons.arrow_forward_rounded,
-                        size: 14,
-                        color: AppColors.secondaryAccent,
+                        project.toolsUsed!,
+                        style: AppTextStyles.toolsLabel.copyWith(fontSize: 12),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                  ),
-                ],
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Text(
+                          'View Details',
+                          style: AppTextStyles.cardSubtitle.copyWith(
+                            color: AppColors.secondaryAccent,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 14,
+                          color: AppColors.secondaryAccent,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -851,6 +957,18 @@ class ProjectDetailPage extends StatelessWidget {
                             }),
                           ],
 
+                          if (project.productViews.isNotEmpty) ...[
+                            const SizedBox(height: 36),
+                            Text('Product Views',
+                                style: AppTextStyles.dialogSectionTitle),
+                            const SizedBox(height: 14),
+                            ProductViewer(
+                              views: project.productViews,
+                              onImageTap: (path) =>
+                                  _openImagePreview(context, path),
+                            ),
+                          ],
+
                           if (project.galleryImages.isNotEmpty) ...[
                             const SizedBox(height: 36),
                             Text('Gallery',
@@ -934,6 +1052,150 @@ class ProjectDetailPage extends StatelessWidget {
         ),
       ),
       child: Column(children: rows),
+    );
+  }
+}
+
+// ─── Product Viewer (labeled, clickable part views) ───────────────────
+
+class ProductViewer extends StatefulWidget {
+  final List<ProductView> views;
+  final void Function(String path) onImageTap;
+
+  const ProductViewer({
+    required this.views,
+    required this.onImageTap,
+    super.key,
+  });
+
+  @override
+  State<ProductViewer> createState() => _ProductViewerState();
+}
+
+class _ProductViewerState extends State<ProductViewer> {
+  int _selected = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    final current = widget.views[_selected];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Large main image — contained so nothing is cropped.
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () => widget.onImageTap(current.imagePath),
+            child: Container(
+              height: 420,
+              decoration: BoxDecoration(
+                color: AppColors.surface,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(
+                  color: AppColors.divider.withOpacity(AppOpacity.subtle),
+                ),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 260),
+                child: Padding(
+                  key: ValueKey(current.imagePath),
+                  padding: const EdgeInsets.all(16),
+                  child: Image.asset(
+                    current.imagePath,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        if (current.caption.trim().isNotEmpty) ...[
+          const SizedBox(height: 12),
+          Text(
+            current.caption,
+            style: AppTextStyles.body.copyWith(
+              color: AppColors.textSecondary,
+              fontSize: 15,
+            ),
+          ),
+        ],
+        const SizedBox(height: 18),
+        // Labeled thumbnail selector.
+        Wrap(
+          spacing: 20,
+          runSpacing: 16,
+          alignment: WrapAlignment.center,
+          children: [
+            for (int i = 0; i < widget.views.length; i++)
+              _ProductThumb(
+                view: widget.views[i],
+                isActive: i == _selected,
+                onTap: () => setState(() => _selected = i),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ProductThumb extends StatelessWidget {
+  final ProductView view;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _ProductThumb({
+    required this.view,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              padding: const EdgeInsets.all(3),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isActive
+                      ? AppColors.primary
+                      : AppColors.divider.withOpacity(AppOpacity.light),
+                  width: isActive ? 2.5 : 1.5,
+                ),
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  view.imagePath,
+                  width: 56,
+                  height: 56,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              view.label,
+              style: AppTextStyles.cardSubtitle.copyWith(
+                fontSize: 13,
+                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
+                color:
+                    isActive ? AppColors.textWhite : AppColors.textSecondary,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

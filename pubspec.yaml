@@ -52,6 +52,10 @@ flutter:
     - lib/assets/fabcat_esp32.jpg
     - lib/assets/fabcat_team.jpg
     - lib/assets/welcome_new.png
+    - lib/assets/ecommerce_poster.png
+    - lib/assets/ecommerce_team.jpg
+    - lib/assets/vrptw_poster.png
+    - lib/assets/vrptw_slide1.png
 
   
   fonts:

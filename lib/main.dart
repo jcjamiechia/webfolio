@@ -1,4 +1,5 @@
 import 'dart:html' as html;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:term_summary/components.dart';
@@ -52,15 +53,77 @@ class _PortfolioPageState extends State<PortfolioPage> {
   final _experienceKey = GlobalKey();
   final _leadershipKey = GlobalKey();
   final _contactKey = GlobalKey();
-  double _welcomeOpacity = 1.0;
+
+  // Continuous, per-frame scroll values are kept off setState so only the
+  // widgets that depend on them rebuild (not the whole page) as you scroll.
+  final ValueNotifier<double> _welcomeOpacity = ValueNotifier(1.0);
+  final ValueNotifier<double> _scrollProgress = ValueNotifier(0.0);
 
   String _activeSection = 'About';
   bool _navElevated = false;
   String _selectedTag = 'All';
 
+  // Smooth mouse-wheel scrolling state.
+  double _wheelTarget = 0;
+  bool _wheelAnimating = false;
+
   final List<ProjectData> _projects = const [
     ProjectData(
-      imagePath: 'lib/assets/wbgt.jpg',
+      imagePath: 'lib/assets/vrptw_slide1.png',
+      title:
+          'Vehicle Routing Problem with Time Windows Applied to MRT Stations in Singapore',
+      summary:
+          'Formulated a Vehicle Routing Problem with Time Windows (VRPTW) as a MILP to optimise parcel-delivery routes across all Singapore MRT stations.',
+      subtitle:
+          'Optimised parcel-delivery routes to all MRT stations in Singapore, treating stations as high-coverage collection hubs.',
+      company: '40.002 Optimisation',
+      strategies:
+          'MILP formulation, route optimisation, time-window constraints, data visualisation',
+      timeline: 'Apr 2026 – Jun 2026',
+      tags: ['Data', 'Software'],
+      toolsUsed: 'Python',
+      fullDescription:
+          '''Singapore’s dense urban transport network makes route planning especially complex when servicing many locations under delivery time windows. Combining the road network with a high density of stops makes routing optimisation both computationally challenging and practically valuable.
+
+In this project, we addressed the Vehicle Routing Problem with Time Windows (VRPTW) by optimising parcel-delivery routes to all MRT stations in Singapore, treating the stations as collection hubs. MRT stations were chosen for their high accessibility and even coverage across the island — most customers live close to a station, letting them collect parcels conveniently during daily commutes while consolidating deliveries to fewer points.
+
+We modelled the problem as a Mixed-Integer Linear Program (MILP) whose objective is to determine optimal vehicle routes that minimise total travel distance while ensuring every station is visited subject to demand and time-window constraints.''',
+      documentTitles: [
+        'Presentation',
+        'Slide 6 — Route Optimisation Animation',
+        'Project Poster',
+      ],
+      documentEmbedUrls: [
+        'https://docs.google.com/presentation/d/1D9NoLAehRiq2UU9EUEkxqUZePwydHZRQ/embed?start=false&loop=false&delayms=3000',
+        'https://drive.google.com/file/d/1HB41rUFbEsYqLb9hFJ7v_Xg4pDxLNRjL/preview',
+        'https://drive.google.com/file/d/17Ri5JSjQp059i8K1kQXngNnSyYn8wsVV/preview',
+      ],
+      note:
+          'Slide 6 of the deck is an animation that could not be embedded in the slides/PDF — the “Route Optimisation Animation” below shows it in full.',
+      highlights: [
+        'Team #7: Ernest Ching, Davina Nadine Tanaya, Teh Wu Rui, Chloe Teh, Jamie Chia.',
+      ],
+      galleryImages: ['lib/assets/vrptw_poster.png'],
+      galleryImageWidth: 520,
+      galleryImageHeight: 368,
+    ),
+    ProjectData(
+      imagePath: 'lib/assets/ecommerce_poster.png',
+      title: 'Data Analytics for E-Commerce',
+      summary: 'To be filled later.',
+      subtitle: 'To be filled later.',
+      company: '40.011 Data and Business Analytics',
+      strategies: 'To be filled later.',
+      timeline: 'Feb 2026 – Apr 2026',
+      tags: ['Data'],
+      toolsUsed: 'To be filled later.',
+      fullDescription: 'To be filled later.',
+      galleryImages: ['lib/assets/ecommerce_team.jpg'],
+      galleryImageWidth: 800,
+      galleryImageHeight: 600,
+    ),
+    ProjectData(
+      imagePath: 'lib/assets/wbgtgroup.jpg',
       title: 'Solar Powered Wet Bulb Globe Thermometer',
       summary:
           'Modified a WBGT monitor to be charged and powered by solar energy.',
@@ -72,20 +135,33 @@ class _PortfolioPageState extends State<PortfolioPage> {
       tags: ['Hardware', 'Design'],
       toolsUsed: 'Canva, Fusion360, Fritzing',
       fullDescription:
-          'FabCat is a smart safety attire checker designed for fabrication lab environments. The project focuses on improving compliance and reducing human error through automated detection and feedback.',
+          'A Wet Bulb Globe Thermometer (WBGT) monitor modified to be charged and powered by solar energy, removing the need for mains power during outdoor heat-stress monitoring. The project covered the full design cycle — CAD enclosure design, energy and power analysis to size the solar panel and battery, and user research to shape the form factor.',
       documentTitles: ['Final Report'],
       documentEmbedUrls: [
         'https://drive.google.com/file/d/1VDEpza7Se055y-VaeX1hjCzBYmgYHcHt/preview'
       ],
-      galleryImages: [
-        'lib/assets/wbgtopen.jpg',
-        'lib/assets/wbgtfront.jpg',
-        'lib/assets/wbgtback.jpg',
-        'lib/assets/wbgttesting.jpg',
-        'lib/assets/wbgtgroup.jpg'
+      productViews: [
+        ProductView(
+          label: 'Front',
+          imagePath: 'lib/assets/wbgtfront.jpg',
+          caption: 'Front view — solar panel and globe sensor.',
+        ),
+        ProductView(
+          label: 'Back',
+          imagePath: 'lib/assets/wbgtback.jpg',
+          caption: 'Rear housing and mounting.',
+        ),
+        ProductView(
+          label: 'Internals',
+          imagePath: 'lib/assets/wbgtopen.jpg',
+          caption: 'Internal electronics and wiring layout.',
+        ),
+        ProductView(
+          label: 'Testing',
+          imagePath: 'lib/assets/wbgttesting.jpg',
+          caption: 'Outdoor testing setup.',
+        ),
       ],
-      galleryImageWidth: 400,
-      galleryImageHeight: 225,
     ),
     ProjectData(
       imagePath: 'lib/assets/fabcat.jpg',
@@ -157,28 +233,6 @@ Hence, our problem statement is as follows: How might we predict the participati
       galleryImageWidth: 400,
       galleryImageHeight: 225,
     ),
-    ProjectData(
-      imagePath: 'lib/assets/icecream.png',
-      title: 'Battle of the Ice Cream Cup',
-      summary:
-          'A lifecycle analysis comparing different material choices through sustainability evaluation.',
-      subtitle:
-          'A lifecycle analysis comparing different material choices through sustainability evaluation.',
-      tags: ['Design'],
-      company: '10.023 Designing Energy System',
-      strategies: 'Design, CAD, Energy and Power Analysis, User Research',
-      timeline: 'May 2025 – Aug 2025',
-      toolsUsed: 'Canva, Fusion360, Fritzing',
-      fullDescription:
-          'This project examined the environmental implications of different cup material choices through lifecycle analysis. The work compared trade-offs between sustainability, usability, and production impact.',
-      galleryImageWidth: 800,
-      galleryImageHeight: 480,
-      highlights: [
-        'Compared multiple material options.',
-        'Evaluated sustainability trade-offs.',
-        'Linked design decisions to environmental impact.',
-      ],
-    ),
   ];
 
   @override
@@ -192,6 +246,8 @@ Hence, our problem statement is as follows: How might we predict the participati
   void dispose() {
     _scrollController.removeListener(_handleScroll);
     _scrollController.dispose();
+    _welcomeOpacity.dispose();
+    _scrollProgress.dispose();
     super.dispose();
   }
 
@@ -216,11 +272,47 @@ Hence, our problem statement is as follows: How might we predict the participati
     return position.dy;
   }
 
+  // Glide the page on mouse-wheel input instead of the default stepped jump,
+  // while keeping trackpads (which emit many small deltas) feeling 1:1.
+  void _handlePointerSignal(PointerSignalEvent event) {
+    if (event is! PointerScrollEvent) return;
+    if (!_scrollController.hasClients) return;
+
+    final max = _scrollController.position.maxScrollExtent;
+    final delta = event.scrollDelta.dy;
+    final current = _scrollController.offset;
+
+    if (delta.abs() < 40) {
+      _wheelAnimating = false;
+      final target = (current + delta).clamp(0.0, max);
+      _scrollController.jumpTo(target);
+      _wheelTarget = target;
+      return;
+    }
+
+    // Accumulate onto the in-flight target so fast flicks travel further,
+    // but fall back to the live offset if something else moved the page.
+    final base = (_wheelAnimating && (_wheelTarget - current).abs() < 600)
+        ? _wheelTarget
+        : current;
+    _wheelTarget = (base + delta * 1.15).clamp(0.0, max);
+    _wheelAnimating = true;
+    _scrollController.animateTo(
+      _wheelTarget,
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
   void _handleScroll() {
     if (!mounted) return;
 
     final offset =
         _scrollController.hasClients ? _scrollController.offset : 0.0;
+    final maxExtent = _scrollController.hasClients
+        ? _scrollController.position.maxScrollExtent
+        : 0.0;
+    final progress = maxExtent > 0 ? (offset / maxExtent).clamp(0.0, 1.0) : 0.0;
     final elevated = offset > 24;
 
     const double fadeStart = 280;
@@ -234,6 +326,11 @@ Hence, our problem statement is as follows: How might we predict the participati
     } else {
       welcomeOpacity = 1 - ((offset - fadeStart) / (fadeEnd - fadeStart));
     }
+
+    // These drive only their own ValueListenableBuilders — updating them does
+    // not rebuild the whole page, which keeps per-frame scrolling smooth.
+    _scrollProgress.value = progress;
+    _welcomeOpacity.value = welcomeOpacity;
 
     final sectionPositions = <String, double>{
       'About': _sectionTop(_aboutKey),
@@ -253,13 +350,12 @@ Hence, our problem statement is as follows: How might we predict the participati
       }
     }
 
-    if (elevated != _navElevated ||
-        nearestSection != _activeSection ||
-        welcomeOpacity != _welcomeOpacity) {
+    // Only discrete state (nav background, active section) goes through
+    // setState, so the heavy section/card tree rebuilds at most a few times.
+    if (elevated != _navElevated || nearestSection != _activeSection) {
       setState(() {
         _navElevated = elevated;
         _activeSection = nearestSection;
-        _welcomeOpacity = welcomeOpacity;
       });
     }
   }
@@ -269,23 +365,31 @@ Hence, our problem statement is as follows: How might we predict the participati
     return Scaffold(
       body: Stack(
         children: [
-          Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1120),
-              child: SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
+          Listener(
+            onPointerSignal: _handlePointerSignal,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1120),
+                child: SingleChildScrollView(
+                  controller: _scrollController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const SizedBox(height: 80),
                     Container(key: _welcomeKey),
-                    AnimatedOpacity(
-                      duration: const Duration(milliseconds: 120),
-                      opacity: _welcomeOpacity,
-                      child: Transform.translate(
-                        offset: Offset(0, (1 - _welcomeOpacity) * -30),
-                        child: _buildWelcomeSection(),
-                      ),
+                    ValueListenableBuilder<double>(
+                      valueListenable: _welcomeOpacity,
+                      child: _buildWelcomeSection(),
+                      builder: (context, opacity, child) {
+                        return Opacity(
+                          opacity: opacity,
+                          child: Transform.translate(
+                            offset: Offset(0, (1 - opacity) * -30),
+                            child: child,
+                          ),
+                        );
+                      },
                     ),
                     Container(key: _aboutKey),
                     _buildAboutSection(),
@@ -298,6 +402,7 @@ Hence, our problem statement is as follows: How might we predict the participati
                     Container(key: _contactKey),
                     _buildFooterSection(),
                   ],
+                  ),
                 ),
               ),
             ),
@@ -315,22 +420,26 @@ Hence, our problem statement is as follows: How might we predict the participati
       right: 0,
       child: SafeArea(
         bottom: false,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeOut,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          decoration: BoxDecoration(
-            color: _navElevated ? AppColors.navSurface : AppColors.background,
-            border: Border(
-              bottom: BorderSide(
-                color: _navElevated
-                    ? AppColors.divider.withOpacity(AppOpacity.subtle)
-                    : Colors.transparent,
-                width: 1,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOut,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              decoration: BoxDecoration(
+                color:
+                    _navElevated ? AppColors.navSurface : AppColors.background,
+                border: Border(
+                  bottom: BorderSide(
+                    color: _navElevated
+                        ? AppColors.divider.withOpacity(AppOpacity.subtle)
+                        : Colors.transparent,
+                    width: 1,
+                  ),
+                ),
               ),
-            ),
-          ),
-          child: Row(
+              child: Row(
             children: [
               MouseRegion(
                 cursor: SystemMouseCursors.click,
@@ -372,8 +481,30 @@ Hence, our problem statement is as follows: How might we predict the participati
                   ),
                 ],
               ),
-            ],
-          ),
+                ],
+              ),
+            ),
+            // Scroll progress indicator
+            SizedBox(
+              height: 2.5,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: ValueListenableBuilder<double>(
+                  valueListenable: _scrollProgress,
+                  child: const DecoratedBox(
+                    decoration: BoxDecoration(color: AppColors.primary),
+                  ),
+                  builder: (context, progress, child) {
+                    return FractionallySizedBox(
+                      widthFactor: progress.clamp(0.0, 1.0),
+                      heightFactor: 1,
+                      child: child,
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -448,9 +579,16 @@ Hence, our problem statement is as follows: How might we predict the participati
                   label: const Text('View Resume'),
                   style: AppButtonStyles.secondaryButton,
                 ),
-                const EmailButton(
-                  toAddress: 'cyzj1234@gmail.com',
-                  label: 'Contact Me',
+                ElevatedButton.icon(
+                  onPressed: () {
+                    html.window.open(
+                      'https://www.linkedin.com/in/jcjamiechia/',
+                      '_blank',
+                    );
+                  },
+                  icon: const FaIcon(FontAwesomeIcons.linkedin, size: 18),
+                  label: const Text('Connect on LinkedIn'),
+                  style: AppButtonStyles.primaryButton,
                 ),
               ],
             ),
@@ -661,6 +799,19 @@ Hence, our problem statement is as follows: How might we predict the participati
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             SectionTitle('Leadership'),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
+              child: ExperienceItem(
+                title: 'House Guardians @ Singapore University of Technology and Design',
+                subtitle:
+                    'Senator, Housing Representative of 10th Students’ Association Council | Nov 2024 – Present',
+                tasks: [
+                  'Oversaw well-being of 1200+ hostel residents and served as bridge between the Office of Student Life and residents, ensuring safety and comfort while advocating for residents’ needs.',
+                  'Organized 15 hostel and welfare events for 1200+ residents, enhancing community engagement and the living environment.',
+                ],
+              ),
+            ),
+            SizedBox(height: AppSpacing.sm),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: ExperienceItem(

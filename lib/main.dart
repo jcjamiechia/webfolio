@@ -89,23 +89,18 @@ In this project, we addressed the Vehicle Routing Problem with Time Windows (VRP
 
 We modelled the problem as a Mixed-Integer Linear Program (MILP) whose objective is to determine optimal vehicle routes that minimise total travel distance while ensuring every station is visited subject to demand and time-window constraints.''',
       documentTitles: [
-        'Presentation',
-        'Slide 6 — Route Optimisation Animation',
         'Project Poster',
+        'Presentation',
       ],
       documentEmbedUrls: [
-        'https://drive.google.com/file/d/1VhONEfee0TDmVbXFE20aHak5JS2k36aB/preview',
-        'https://drive.google.com/file/d/1HB41rUFbEsYqLb9hFJ7v_Xg4pDxLNRjL/preview',
         'https://drive.google.com/file/d/17Ri5JSjQp059i8K1kQXngNnSyYn8wsVV/preview',
+        'https://drive.google.com/file/d/1VhONEfee0TDmVbXFE20aHak5JS2k36aB/preview',
       ],
       note:
-          'Slide 6 of the deck is an animation that could not be embedded in the slides/PDF — the “Route Optimisation Animation” below shows it in full.',
-      highlights: [
-        'Team #7: Ernest Ching, Davina Nadine Tanaya, Teh Wu Rui, Chloe Teh, Jamie Chia.',
-      ],
-      galleryImages: ['lib/assets/vrptw_poster.png'],
+          'Slide 6 of the deck is an animation that could not be embedded in the slides/PDF — the looping “Route Optimisation Animation” below shows it in full.',
+      galleryImages: ['lib/assets/vrptw_route.gif'],
       galleryImageWidth: 520,
-      galleryImageHeight: 368,
+      galleryImageHeight: 293,
     ),
     ProjectData(
       imagePath: 'lib/assets/ecommerce_poster.png',
@@ -382,12 +377,17 @@ Hence, our problem statement is as follows: How might we predict the participati
                       valueListenable: _welcomeOpacity,
                       child: _buildWelcomeSection(),
                       builder: (context, opacity, child) {
-                        return Opacity(
-                          opacity: opacity,
-                          child: Transform.translate(
-                            offset: Offset(0, (1 - opacity) * -30),
-                            child: child,
-                          ),
+                        final translated = Transform.translate(
+                          offset: Offset(0, (1 - opacity) * -30),
+                          child: child,
+                        );
+                        // Opacity triggers a costly saveLayer on the canvas
+                        // renderer; skip it entirely when fully opaque so it
+                        // only pays the cost during the brief fade.
+                        return RepaintBoundary(
+                          child: opacity >= 0.99
+                              ? translated
+                              : Opacity(opacity: opacity, child: translated),
                         );
                       },
                     ),
@@ -781,6 +781,25 @@ Hence, our problem statement is as follows: How might we predict the participati
                 tasks: [
                   'Mentored a group of 6 students in prototyping, storytelling, and pitching skills.',
                 ],
+                reflection: [
+                  ReflectionSection(
+                    heading: 'What I did',
+                    body:
+                        'Reflection placeholder — describe your role mentoring the group and the project they worked on.',
+                  ),
+                  ReflectionSection(
+                    heading: 'What I learned',
+                    body:
+                        'Reflection placeholder — what did mentoring teach you about communication and guiding others?',
+                  ),
+                ],
+                photos: [
+                  ExperiencePhoto(
+                    imagePath: 'lib/assets/experience.jpg',
+                    caption:
+                        'Placeholder photo — replace with an image from STEAMunity.',
+                  ),
+                ],
               ),
             ),
           ],
@@ -811,6 +830,25 @@ Hence, our problem statement is as follows: How might we predict the participati
                   'Supported communication on housing policies, complaints, disciplinary matters, and admin updates.',
                   'Worked with Residential College stakeholders to ensure resident concerns were clearly represented.',
                 ],
+                reflection: [
+                  ReflectionSection(
+                    heading: 'Why this role matters to me',
+                    body:
+                        'Reflection placeholder — share why representing residents and advocating for their needs is meaningful to you.',
+                  ),
+                  ReflectionSection(
+                    heading: 'What I learned',
+                    body:
+                        'Reflection placeholder — what have you learned about policy, stakeholder management, or listening to a community?',
+                  ),
+                ],
+                photos: [
+                  ExperiencePhoto(
+                    imagePath: 'lib/assets/experience.jpg',
+                    caption:
+                        'Placeholder photo — replace with an image from this role.',
+                  ),
+                ],
               ),
             ),
             SizedBox(height: AppSpacing.sm),
@@ -826,6 +864,25 @@ Hence, our problem statement is as follows: How might we predict the participati
                   'Served as an information point for HGs and residents on residential and admin matters.',
                   'Supported HG continuity through recruitment, internal coordination, and communication with the Residential College House Committee.',
                 ],
+                reflection: [
+                  ReflectionSection(
+                    heading: 'What I did',
+                    body:
+                        'Reflection placeholder — describe the operations and events you supported as a Senator.',
+                  ),
+                  ReflectionSection(
+                    heading: 'What I learned',
+                    body:
+                        'Reflection placeholder — what did coordinating across teams and events teach you?',
+                  ),
+                ],
+                photos: [
+                  ExperiencePhoto(
+                    imagePath: 'lib/assets/experience.jpg',
+                    caption:
+                        'Placeholder photo — replace with an image from House Guardians.',
+                  ),
+                ],
               ),
             ),
             SizedBox(height: AppSpacing.sm),
@@ -839,6 +896,25 @@ Hence, our problem statement is as follows: How might we predict the participati
                   'Liaised with the Office of Campus Infrastructure & Facilities and the Office of Student Life to request logistics and book venues.',
                   'Managed acquisition of props and materials for programmes and games.',
                   'Coordinated full set-up and tear-down operations for the event.',
+                ],
+                reflection: [
+                  ReflectionSection(
+                    heading: 'What I did',
+                    body:
+                        'Reflection placeholder — describe leading the logistics subcommittee for Orientation 2025.',
+                  ),
+                  ReflectionSection(
+                    heading: 'What I learned',
+                    body:
+                        'Reflection placeholder — what did an 8-month planning cycle teach you about leadership and logistics?',
+                  ),
+                ],
+                photos: [
+                  ExperiencePhoto(
+                    imagePath: 'lib/assets/experience.jpg',
+                    caption:
+                        'Placeholder photo — replace with an image from Orientation 2025.',
+                  ),
                 ],
               ),
             ),

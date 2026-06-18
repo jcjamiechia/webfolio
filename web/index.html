@@ -30,6 +30,25 @@
 
   <title>term_summary</title>
   <link rel="manifest" href="manifest.json">
+
+  <script>
+    // Prevent browser page-zoom so pinching to zoom an embedded PDF/poster
+    // doesn't scale the whole site. Trackpad pinch arrives as ctrl+wheel; the
+    // event still reaches Flutter and the Drive PDF viewer keeps its own zoom
+    // controls, so only the page-level zoom is suppressed.
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+    window.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) &&
+          ['+', '-', '=', '0'].indexOf(e.key) !== -1) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('gesturestart', function (e) {
+      e.preventDefault();
+    });
+  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

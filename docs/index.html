@@ -1,37 +1,182 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jamie Chia — Portfolio</title>
+  <meta name="description" content="Jamie Chia — Engineering Systems & Design student at SUTD, aspiring data analyst. Projects in data analytics, optimisation, hardware, and design, plus leadership and experience." />
+  <meta name="author" content="Jamie Chia" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
+  <!-- Open Graph / social preview -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jamie Chia — Portfolio" />
+  <meta property="og:description" content="Engineering Systems & Design student at SUTD. Projects in data analytics, optimisation, hardware, and design." />
+  <meta property="og:image" content="assets/welcome_new.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="styles.css" />
 
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
-  <base href="/webfolio/">
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
-
-  <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="term_summary">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>term_summary</title>
-  <link rel="manifest" href="manifest.json">
+  <script>
+    // Prevent browser page-zoom (trackpad pinch = ctrl+wheel) so zooming an
+    // embedded PDF/poster doesn't scale the whole site. The Drive PDF viewer
+    // keeps its own zoom controls.
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+    window.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].indexOf(e.key) !== -1) {
+        e.preventDefault();
+      }
+    });
+    document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+  </script>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <div class="bg-mesh" aria-hidden="true"></div>
+  <div class="bg-noise" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#welcome" class="brand">Jamie Chia</a>
+      <nav class="nav-links">
+        <a href="#about" data-section="about">About</a>
+        <a href="#projects" data-section="projects">Projects</a>
+        <a href="#experience" data-section="experience">Experience</a>
+        <a href="#leadership" data-section="leadership">Leadership</a>
+      </nav>
+    </div>
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+  </header>
+
+  <main class="container">
+    <!-- Welcome -->
+    <section id="welcome" class="welcome reveal">
+      <div class="hero-banner">
+        <img src="assets/welcome_new.png" alt="Welcome banner" />
+        <div class="hero-glow" aria-hidden="true"></div>
+      </div>
+      <h1 class="hero-title">
+        Hi, I'm <span class="gradient-text">Jamie!</span>
+      </h1>
+      <p class="hero-sub">
+        Engineering Systems &amp; Design Student
+        <span class="accent">@ SUTD</span>
+      </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a
+          href="https://drive.google.com/file/d/1dFNboKUrSC80b1R4rKAK2eT_RFc7WORm/view"
+          target="_blank"
+          rel="noopener"
+          class="btn btn-ghost"
+        >
+          <i class="fa-regular fa-file-lines"></i> View Resume
+        </a>
+        <a
+          href="https://www.linkedin.com/in/jcjamiechia/"
+          target="_blank"
+          rel="noopener"
+          class="btn btn-primary"
+        >
+          <i class="fa-brands fa-linkedin"></i> Connect on LinkedIn
+        </a>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about reveal">
+      <div class="about-text">
+        <h2 class="section-title">About</h2>
+        <p>
+          I'm currently studying Engineering Systems and Design at Singapore
+          University of Technology and Design, with a minor in Computer Science.
+          I plan to specialise in Business Analytics and Operation Research and
+          Supply Chain and Logistics.
+        </p>
+        <p>
+          I've always liked working with numbers and figures, and have worked on
+          a few Data Analytic projects such as building models and forecasting.
+          As an engineering student, I enjoy stepping out of my comfort zone and
+          involving myself in miscellaneous projects to learn new skills!
+        </p>
+        <p>
+          Besides academics, I'm passionate about event planning and servant
+          leadership. I care about my community and am interested in projects
+          that make a difference.
+        </p>
+      </div>
+      <div class="about-image">
+        <img src="assets/about.jpg" alt="Portrait of Jamie" />
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="projects reveal">
+      <h2 class="section-title">Projects</h2>
+      <div class="filter-chips" id="filterChips">
+        <button class="chip active" data-tag="All">All</button>
+        <button class="chip" data-tag="Hardware">Hardware</button>
+        <button class="chip" data-tag="Software">Software</button>
+        <button class="chip" data-tag="Data">Data</button>
+        <button class="chip" data-tag="Design">Design</button>
+      </div>
+      <div class="project-grid" id="projectGrid"></div>
+    </section>
+
+    <!-- Experience -->
+    <section id="experience" class="experience reveal">
+      <h2 class="section-title">Experience</h2>
+      <div class="exp-list" id="experienceList"></div>
+    </section>
+
+    <!-- Leadership -->
+    <section id="leadership" class="leadership reveal">
+      <h2 class="section-title">Leadership</h2>
+      <div class="exp-list" id="leadershipList"></div>
+    </section>
+
+    <!-- Contact / Footer -->
+    <footer id="contact" class="footer reveal">
+      <div class="footer-rule"></div>
+      <h2 class="footer-title">Let's connect</h2>
+      <p class="footer-sub">Feel free to reach out through email or any of my socials.</p>
+      <div class="socials">
+        <a href="https://www.instagram.com/jcjamiechia/" target="_blank" rel="noopener" class="social">
+          <i class="fa-brands fa-instagram"></i><span>Instagram</span>
+        </a>
+        <a href="https://github.com/jcjamiechia" target="_blank" rel="noopener" class="social">
+          <i class="fa-brands fa-github"></i><span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/jcjamiechia/" target="_blank" rel="noopener" class="social">
+          <i class="fa-brands fa-linkedin"></i><span>LinkedIn</span>
+        </a>
+      </div>
+      <a href="mailto:cyzj1234@gmail.com" class="btn btn-primary email-btn">
+        <i class="fa-regular fa-envelope"></i> Send Email
+      </a>
+      <p class="copyright">© 2026 Jamie Chia</p>
+    </footer>
+  </main>
+
+  <!-- Project modal -->
+  <div class="modal" id="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel" role="dialog" aria-modal="true">
+      <button class="modal-close" data-close aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>

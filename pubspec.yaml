@@ -56,6 +56,7 @@ flutter:
     - lib/assets/ecommerce_team.jpg
     - lib/assets/vrptw_poster.png
     - lib/assets/vrptw_slide1.png
+    - lib/assets/vrptw_route.gif
 
   
   fonts:

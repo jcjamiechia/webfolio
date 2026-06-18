@@ -295,33 +295,40 @@ class ParallaxBox extends StatelessWidget {
       return SizedBox(height: height, width: double.infinity, child: child);
     }
 
-    return AnimatedBuilder(
-      animation: scrollable.position,
-      builder: (context, _) {
-        double drift = 0;
-        final box = context.findRenderObject() as RenderBox?;
-        final viewport =
-            scrollable.context.findRenderObject() as RenderBox?;
-        if (box != null &&
-            box.hasSize &&
-            viewport != null &&
-            viewport.hasSize) {
-          final centerY = box
-              .localToGlobal(box.size.center(Offset.zero), ancestor: viewport)
-              .dy;
-          final frac = (centerY / viewport.size.height).clamp(0.0, 1.0);
-          drift = (0.5 - frac) * 2 * range;
-        }
-        return OverflowBox(
-          minHeight: height + range * 2,
-          maxHeight: height + range * 2,
-          alignment: Alignment.center,
-          child: Transform.translate(
-            offset: Offset(0, drift),
-            child: expanded,
-          ),
-        );
-      },
+    // RepaintBoundary keeps the per-frame parallax repaint from invalidating
+    // sibling widgets, and the cached `child` means the image subtree is never
+    // rebuilt — only its translate offset changes.
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: scrollable.position,
+        child: expanded,
+        builder: (context, child) {
+          double drift = 0;
+          final box = context.findRenderObject() as RenderBox?;
+          final viewport =
+              scrollable.context.findRenderObject() as RenderBox?;
+          if (box != null &&
+              box.hasSize &&
+              viewport != null &&
+              viewport.hasSize) {
+            final centerY = box
+                .localToGlobal(box.size.center(Offset.zero),
+                    ancestor: viewport)
+                .dy;
+            final frac = (centerY / viewport.size.height).clamp(0.0, 1.0);
+            drift = (0.5 - frac) * 2 * range;
+          }
+          return OverflowBox(
+            minHeight: height + range * 2,
+            maxHeight: height + range * 2,
+            alignment: Alignment.center,
+            child: Transform.translate(
+              offset: Offset(0, drift),
+              child: child,
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -419,21 +426,75 @@ class SimpleImageCard extends StatelessWidget {
 
 // ─── Experience ───────────────────────────────────────────────────────
 
+/// A photo with an optional caption, shown on an experience detail page.
+class ExperiencePhoto {
+  final String imagePath;
+  final String caption;
+
+  const ExperiencePhoto({required this.imagePath, this.caption = ''});
+}
+
+/// A titled paragraph of blog-style reflection.
+class ReflectionSection {
+  final String heading;
+  final String body;
+
+  const ReflectionSection({required this.heading, required this.body});
+}
+
 class ExperienceItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final List<String> tasks;
 
+  /// When [photos] or [reflection] are non-empty, the card becomes clickable
+  /// and opens an [ExperienceDetailPage] with a gallery and written reflection.
+  final List<ExperiencePhoto> photos;
+  final List<ReflectionSection> reflection;
+
   const ExperienceItem({
     required this.title,
     required this.subtitle,
     required this.tasks,
+    this.photos = const [],
+    this.reflection = const [],
     super.key,
   });
 
+  bool get _hasDetail => photos.isNotEmpty || reflection.isNotEmpty;
+
+  void _openDetail(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            ExperienceDetailPage(
+          title: title,
+          subtitle: subtitle,
+          tasks: tasks,
+          photos: photos,
+          reflection: reflection,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: SlideTransition(
+              position: Tween<Offset>(
+                begin: const Offset(0, 0.04),
+                end: Offset.zero,
+              ).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeOut)),
+              child: child,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: AppColors.surface,
@@ -480,6 +541,242 @@ class ExperienceItem extends StatelessWidget {
               ),
             ),
           ),
+          if (_hasDetail) ...[
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                Text(
+                  'Read reflection',
+                  style: AppTextStyles.cardSubtitle.copyWith(
+                    color: AppColors.secondaryAccent,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 14,
+                  color: AppColors.secondaryAccent,
+                ),
+              ],
+            ),
+          ],
+        ],
+      ),
+    );
+
+    if (!_hasDetail) return card;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () => _openDetail(context),
+        child: HoverLift(showGlow: true, child: card),
+      ),
+    );
+  }
+}
+
+// ─── Experience Detail Page (full page) ───────────────────────────────
+
+class ExperienceDetailPage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final List<String> tasks;
+  final List<ExperiencePhoto> photos;
+  final List<ReflectionSection> reflection;
+
+  const ExperienceDetailPage({
+    required this.title,
+    required this.subtitle,
+    required this.tasks,
+    required this.photos,
+    required this.reflection,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.escape): () {
+          Navigator.of(context).pop();
+        },
+      },
+      child: Focus(
+        autofocus: true,
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          body: SingleChildScrollView(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 760),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SafeArea(
+                      bottom: false,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () => Navigator.of(context).pop(),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.pill),
+                                border: Border.all(
+                                  color: AppColors.divider
+                                      .withOpacity(AppOpacity.subtle),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.arrow_back_rounded,
+                                      size: 16,
+                                      color: AppColors.textSecondary),
+                                  const SizedBox(width: 6),
+                                  Text('Back',
+                                      style: AppTextStyles.navLabel.copyWith(
+                                          color: AppColors.textSecondary)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 28, 24, 56),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title, style: AppTextStyles.dialogTitle),
+                          const SizedBox(height: 10),
+                          Text(
+                            subtitle,
+                            style: AppTextStyles.body.copyWith(
+                              fontSize: 16,
+                              color: AppColors.primary.withOpacity(0.85),
+                            ),
+                          ),
+                          if (tasks.isNotEmpty) ...[
+                            const SizedBox(height: 28),
+                            Text('What I did',
+                                style: AppTextStyles.dialogSectionTitle),
+                            const SizedBox(height: 14),
+                            ...tasks.map((t) => _bullet(t)),
+                          ],
+                          if (reflection.isNotEmpty) ...[
+                            const SizedBox(height: 36),
+                            Text('Reflection',
+                                style: AppTextStyles.dialogSectionTitle),
+                            const SizedBox(height: 8),
+                            ...reflection.map(
+                              (s) => Padding(
+                                padding: const EdgeInsets.only(top: 18),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      s.heading,
+                                      style:
+                                          AppTextStyles.cardSubtitle.copyWith(
+                                        color: AppColors.primary,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(s.body, style: AppTextStyles.body),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                          if (photos.isNotEmpty) ...[
+                            const SizedBox(height: 36),
+                            Text('Photos',
+                                style: AppTextStyles.dialogSectionTitle),
+                            const SizedBox(height: 14),
+                            ...photos.map((p) => _photo(p)),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _bullet(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              width: 5,
+              height: 5,
+              decoration: BoxDecoration(
+                color: AppColors.primary.withOpacity(0.5),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(child: Text(text, style: AppTextStyles.body)),
+        ],
+      ),
+    );
+  }
+
+  Widget _photo(ExperiencePhoto p) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: Border.all(
+                color: AppColors.divider.withOpacity(AppOpacity.subtle),
+              ),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Image.asset(
+              p.imagePath,
+              fit: BoxFit.contain,
+              width: double.infinity,
+            ),
+          ),
+          if (p.caption.trim().isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              p.caption,
+              style: AppTextStyles.cardSubtitle.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: 14,
+              ),
+            ),
+          ],
         ],
       ),
     );

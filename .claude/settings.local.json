@@ -43,7 +43,27 @@
       "Bash(python -m http.server 8090)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8090/)",
       "Bash(curl -sL \"https://drive.google.com/uc?export=download&id=1VhONEfee0TDmVbXFE20aHak5JS2k36aB\" -o newslides_tmp)",
-      "Bash(rm newslides_tmp)"
+      "Bash(rm newslides_tmp)",
+      "Bash(ffmpeg -version)",
+      "Bash(python -c \"import imageio_ffmpeg; print\\('imageio-ffmpeg', imageio_ffmpeg.get_ffmpeg_version\\(\\)\\)\")",
+      "Bash(python -c \"import imageio; print\\('imageio ok'\\)\")",
+      "Bash(python -c \"import imageio_ffmpeg, imageio; print\\('ready', imageio_ffmpeg.get_ffmpeg_version\\(\\)\\)\")",
+      "Bash(rm -f route_tmp.mp4 palette.png)",
+      "Bash(taskkill //F //IM python.exe //T)",
+      "Bash(python -m http.server 8095)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:8090/)",
+      "Bash(echo \"Flutter :8090 -> $\\(curl -s -o /dev/null -w '%{http_code}' http://localhost:8090/\\)\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/)",
+      "Bash(echo \"HTML :8095 -> $\\(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/\\)\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/assets/vrptw_route.gif)",
+      "Bash(cp webfolio/lib/assets/ecommerce_poster.png webfolio/lib/assets/ecommerce_team.jpg htmlfolio/assets/)",
+      "Bash(cp webfolio/web/favicon.png htmlfolio/)",
+      "Bash(echo \"index: $\\(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/\\)\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/favicon.png)",
+      "Bash(echo \"favicon: $\\(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/favicon.png\\)\")",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/assets/ecommerce_poster.png)",
+      "Bash(echo \"ecommerce: $\\(curl -s -o /dev/null -w '%{http_code}' http://localhost:8095/assets/ecommerce_poster.png\\)\")",
+      "Bash(grep -vE \"^\\\\s*$\")"
     ]
   }
 }

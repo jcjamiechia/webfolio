@@ -42,11 +42,10 @@ const projects = [
       'Forecast reached ~90% accuracy (4.76M predicted vs 4.83M actual units) for January 2026.',
       'Component-based forecasting outperformed direct revenue forecasting.',
       'Final assortment: 1,679 SKUs and 3,834 opening units within a ~$19,000 budget ($18,999.95 total cost).',
-      'Team 13: Anchita Kharbanda, Daryl Cheong, Ezekiel Lim, Jamie Chia, Mayur Vengali.',
     ],
     gallery: [
       { src: 'assets/ecommerce_poster.png', caption: 'Project poster — full methodology and results.' },
-      { src: 'assets/ecommerce_team.jpg', caption: 'Team 13.' },
+      { src: 'assets/ecommerce_team.jpg', caption: 'Our team and our industry partner Brennan Leong from SwipeRx.' },
     ],
     documents: [
       { title: 'Presentation', url: 'https://drive.google.com/file/d/1OvwsOnH_G2eLBTJ5XCJ2tUlpN4kkUcaI/preview' },
